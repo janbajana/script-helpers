@@ -1,59 +1,73 @@
 #!/bin/bash
 
-#export CC=/usr/bin/clang-7
-#export CXX=/usr/bin/clang++-7
-
 set -x
 
-SOURCES_FOLDER="$1"
-BUILD_FOLDER="$2"
+SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
+BUILD_FOLDER="$2" # output directory (example) /e/Git/
 BUILD_TYPE="$3" # Release/Debug
-BUILD_ARCH="$4" #yocto/Win64/linux
+BUILD_ARCH="$4" # Android/Win64/linux
 SOURCE_PROJECT="magnum-examples"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
-
 GENERATOR="Ninja"
 
-if [ "$BUILD_ARCH" = "yocto" ] ; then
-ADDITIONAL_CMAKE_PARAMS="-DCMAKE_TOOLCHAIN_FILE=/usr/local/vos-x86_64/DAQRI-VOS-Toolchain-GCC.cmake"
-elif [ "$BUILD_ARCH" = "Win64" ] ; then
-ADDITIONAL_CMAKE_PARAMS=""
-GENERATOR="Visual Studio 15 2017 Win64"
-else
-ADDITIONAL_CMAKE_PARAMS=""
-BUILD_ARCH="x86"
-#export CC=/usr/bin/clang
-#export CXX=/usr/bin/clang++
-fi
-
 BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_ARCH}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-install-${BUILD_ARCH}-${BUILD_TYPE}
-STAGING_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-staging-${BUILD_ARCH}-${BUILD_TYPE}
-
-# Windows: all binaries have to be installed to the same location including Corrade.
-INSTALL_LOCATION=${BUILD_FOLDER}/install
-STAGING_LOCATION=${BUILD_FOLDER}/staging
-
-ls ${BUILD_FOLDER}/corrade-staging-${BUILD_ARCH}-${BUILD_TYPE}/share/cmake/Corrade
+#INSTALL_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-install-${BUILD_ARCH}-${BUILD_TYPE}
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}
 
 mkdir -p "${BUILD_LOCATION}"
 rm -rf "${BUILD_LOCATION}"/*
+
+if [ "$BUILD_ARCH" = "Android" ] ; then
+
+ANDROID_NDK=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
+
+ADDITIONAL_CMAKE_PARAMS=" \
+    -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
+    -DCMAKE_ANDROID_NDK=${ANDROID_NDK} \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=22 \
+    -DCMAKE_ANDROID_ARCH_ABI=armeabi-v7a \
+    -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
+    -DCMAKE_ANDROID_STL_TYPE=c++_static \
+    -DCORRADE_RC_EXECUTABLE=${BUILD_FOLDER}/install-Win64-Release/bin/corrade-rc.exe \
+    "
+#TODO.
+# cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+#   -G"${GENERATOR}" \
+#   -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
+#   -DCMAKE_PREFIX_PATH="/e/Git/build-win/SDL2-2.0.10" \
+#   -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
+#   -DIMGUI_DIR="/e/Git/imgui" \
+#   -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+#   -DWITH_IMGUI_EXAMPLE=ON \
+#   ${ADDITIONAL_CMAKE_PARAMS}
+
+elif [ "$BUILD_ARCH" = "Win64" ] ; then
+
+GENERATOR="Visual Studio 15 2017 Win64"
+
 cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
   -G"${GENERATOR}" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-  -DCMAKE_STAGING_PREFIX="${STAGING_LOCATION}" \
-  -DCMAKE_PREFIX_PATH="${BUILD_FOLDER}/staging;${BUILD_FOLDER}/staging/bin;E:\Git\build-win\SDL2-2.0.10" \
-  -DIMGUI_DIR="E:\Git\imgui" \
+  -DCMAKE_PREFIX_PATH="/e/Git/build-win/SDL2-2.0.10" \
+  -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
+  -DIMGUI_DIR="/e/Git/imgui" \
   -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+  -DWITH_IMGUI_EXAMPLE=ON \
   -DWITH_MOTIONBLUR_EXAMPLE=ON \
   -DWITH_MOUSEINTERACTION_EXAMPLE=ON \
   -DWITH_PICKING_EXAMPLE=ON \
   -DWITH_PRIMITIVES_EXAMPLE=ON \
-  -DWITH_SHADOWS_EXAMPLE=ON \
-  -DWITH_IMGUI_EXAMPLE=ON \
-  -DWITH_OVR_EXAMPLE=OFF \
-  -DWITH_LEAPMOTION_EXAMPLE=OFF
-  ${ADDITIONAL_CMAKE_PARAMS}
+  -DWITH_SHADOWS_EXAMPLE=ON
+
+else
+
+ADDITIONAL_CMAKE_PARAMS=""
+BUILD_ARCH="x86"
+#export CC=/usr/bin/clang
+#export CXX=/usr/bin/clang++
+
+fi
 
 #cd ${BUILD_LOCATION}
 #cmake --build . --config ${BUILD_TYPE}

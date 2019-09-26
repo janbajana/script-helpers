@@ -2,11 +2,11 @@
 
 set -x
 
-SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
-BUILD_FOLDER="$2" # output directory (example) /e/Git/
-BUILD_TYPE="$3" # Release/Debug
-BUILD_ARCH="$4" # Android/Win64/linux
-SOURCE_PROJECT="magnum-integration"
+SOURCES_FOLDER="$1"
+BUILD_FOLDER="$2"
+BUILD_TYPE="$3" #Release/Debug
+BUILD_ARCH="$4" #Android/Android-gradle/Win64/linux
+SOURCE_PROJECT="magnum-bootstrap"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
@@ -18,8 +18,11 @@ rm -rf "${BUILD_LOCATION}"/*
 
 if [ "$BUILD_ARCH" = "Android" ] ; then
 
+# https://doc.magnum.graphics/magnum/platforms-android.html
+# https://doc.magnum.graphics/magnum/classMagnum_1_1Platform_1_1AndroidApplication.html#Platform-AndroidApplication-bootstrap
+
 ANDROID_NDK=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
-INSTALL_LOCATION=${ANDROID_NDK}/platforms/android-22/arch-arm64/usr
+#INSTALL_LOCATION=${ANDROID_NDK}/platforms/android-22/arch-arm64/usr
 
 cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
   -G"${GENERATOR}" \
@@ -32,27 +35,23 @@ cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TY
   -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
   -DCMAKE_ANDROID_STL_TYPE=c++_static \
   -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
-  -DMAGNUM_INCLUDE_INSTALL_PREFIX="${ANDROID_NDK}/sysroot/usr" \
-  -D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
   -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
-  -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-  -DIMGUI_DIR="E:\Git\imgui" \
-  -DWITH_IMGUI=ON 
+  -D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
+  
+elif [ "$BUILD_ARCH" = "Android-gradle" ] ; then
 
-#  -DMAGNUM_INCLUDE_INSTALL_PREFIX="${ANDROID_NDK}/sysroot/usr" \
+cd ${SOURCE_LOCATION}
+
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jre"
+export ANDROID_HOME=${HOME}/AppData/Local/Android/Sdk
+export ANDROID_NDK_HOME=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
+export CMAKE_PREFIX_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE};${BUILD_FOLDER}/install-Win64-Release"
+/c/Gradle/gradle-4.1/bin/gradle build --stacktrace
 
 elif [ "$BUILD_ARCH" = "Win64" ] ; then
 
+ADDITIONAL_CMAKE_PARAMS=""
 GENERATOR="Visual Studio 15 2017 Win64"
-
-cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-  -G"${GENERATOR}" \
-  -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-  -DCMAKE_PREFIX_PATH="/e/Git/build-win/SDL2-2.0.10" \
-  -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
-  -DIMGUI_DIR="/e/Git/imgui" \
-  -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
-  -DWITH_IMGUI=ON
 
 else
 
