@@ -5,7 +5,7 @@ set -x
 SOURCES_FOLDER="$1"
 BUILD_FOLDER="$2"
 BUILD_TYPE="$3" #Release/Debug
-BUILD_ARCH="$4" #Android/Android-gradle/Win64/linux
+BUILD_ARCH="$4" #Android/AndroidGradle/Win64/linux
 SOURCE_PROJECT="magnum-bootstrap"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
@@ -30,15 +30,16 @@ cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TY
   -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
   -DCMAKE_ANDROID_NDK=${ANDROID_NDK} \
   -DCMAKE_SYSTEM_NAME=Android \
-  -DCMAKE_SYSTEM_VERSION=22 \
+  -DCMAKE_SYSTEM_VERSION=26 \
   -DCMAKE_ANDROID_ARCH_ABI=arm64-v8a \
   -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
   -DCMAKE_ANDROID_STL_TYPE=c++_static \
   -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
   -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
-  -D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
+
+  # -D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade"
   
-elif [ "$BUILD_ARCH" = "Android-gradle" ] ; then
+elif [ "$BUILD_ARCH" = "AndroidGradle" ] ; then
 
 cd ${SOURCE_LOCATION}
 

@@ -6,7 +6,7 @@ SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
 BUILD_FOLDER="$2" # output directory (example) /e/Git/
 BUILD_TYPE="$3" # Release/Debug
 BUILD_ARCH="$4" # Android/Win64/linux
-SOURCE_PROJECT="magnum-integration"
+SOURCE_PROJECT="magnum-extras"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
@@ -34,8 +34,6 @@ cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TY
   -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
   -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-  -DIMGUI_DIR="${SOURCES_FOLDER}/imgui" \
-  -DWITH_IMGUI=ON 
 
 #  -D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
 #  -DMAGNUM_INCLUDE_INSTALL_PREFIX="${ANDROID_NDK}/sysroot/usr" \
