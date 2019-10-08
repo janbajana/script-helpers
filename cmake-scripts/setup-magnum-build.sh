@@ -29,6 +29,7 @@ if [ "$BUILD_ARCH" = "Android" ]; then
         -DCMAKE_SYSTEM_NAME=Android \
         -DCMAKE_SYSTEM_VERSION=26 \
         -DCMAKE_ANDROID_ARCH_ABI=arm64-v8a \
+        -DANDROID_ABI=arm64-v8a \
         -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
         -DCMAKE_ANDROID_STL_TYPE=c++_static \
         -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
