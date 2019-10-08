@@ -2,8 +2,8 @@
 
 set -x
 
-SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
-BUILD_FOLDER="$2"   # output directory (example) /e/Git/
+SOURCES_FOLDER="$1" # input directory (example) /e/Git/
+BUILD_FOLDER="$2"   # output directory (example) /e/Git/build/
 BUILD_TYPE="$3"     # Release/Debug
 BUILD_ARCH="$4"     # Android/Win64/linux
 SOURCE_PROJECT="magnum"
