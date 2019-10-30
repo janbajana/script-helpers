@@ -54,7 +54,7 @@ if [ "$BUILD_ARCH" = "Android" ]; then
 
 elif [ "$BUILD_ARCH" = "Win64" ]; then
 
-    GENERATOR="Visual Studio 15 2017 Win64"
+    GENERATOR="Visual Studio 16 2019"
 
     ADDITIONAL_CMAKE_PARAMS=" \
         -DWITH_WINDOWLESSWGLAPPLICATION=ON \
@@ -83,11 +83,13 @@ elif [ "$BUILD_ARCH" = "Win64" ]; then
         -G"${GENERATOR}" \
         -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
         -DCMAKE_PREFIX_PATH="${BUILD_FOLDER}\SDL2-2.0.10" \
-        -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
         -DWITH_SDL2APPLICATION=ON \
         -DWITH_GLFWAPPLICATION=OFF \
+        -DTARGET_DESKTOP_GLES=OFF \
+        -DTARGET_GLES=OFF \
+        -DTARGET_GLES2=OFF
         ${ADDITIONAL_CMAKE_PARAMS}
 
 else #expected Linux x86
