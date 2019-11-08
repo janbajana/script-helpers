@@ -13,6 +13,11 @@ GENERATOR="Ninja"
 BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_ARCH}-${BUILD_TYPE}
 INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}
 
+if [ "$BUILD_ARCH" = "Android" ]; then
+    BUILD_ABI="arm64-v8a" # arm64-v8a/armeabi-v7a (Android only)
+    BUILD_LOCATION=${BUILD_LOCATION}-${BUILD_ABI}
+fi
+
 mkdir -p "${BUILD_LOCATION}"
 rm -rf "${BUILD_LOCATION}"/*
 
@@ -28,8 +33,9 @@ if [ "$BUILD_ARCH" = "Android" ]; then
         -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
         -DCMAKE_SYSTEM_NAME=Android \
         -DCMAKE_SYSTEM_VERSION=26 \
-        -DCMAKE_ANDROID_ARCH_ABI=arm64-v8a \
-        -DANDROID_ABI=arm64-v8a \
+        -DCMAKE_ANDROID_ARCH_ABI=${BUILD_ABI} \
+        -DANDROID_NATIVE_API_LEVEL=26 \
+        -DANDROID_ABI=${BUILD_ABI} \
         -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=clang \
         -DCMAKE_ANDROID_STL_TYPE=c++_static \
         -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
@@ -46,8 +52,10 @@ if [ "$BUILD_ARCH" = "Android" ]; then
         -DWITH_TRADE=ON \
         -DWITH_SDL2APPLICATION=OFF \
         -DWITH_ANDROIDAPPLICATION=ON \
-        -DTARGET_GLES2=ON \
-        -DBUILD_DEPRECATED=OFF
+        -DTARGET_GLES2=OFF \
+        -DTARGET_GLES3=ON \
+        -DBUILD_DEPRECATED=OFF \
+        -DWITH_EGLCONTEXT=ON
 
 #-D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
 #-DMAGNUM_INCLUDE_INSTALL_PREFIX=${ANDROID_NDK}/sysroot/usr \
