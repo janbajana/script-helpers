@@ -6,7 +6,7 @@ SOURCES_FOLDER="$1"
 BUILD_FOLDER="$2"
 BUILD_TYPE="$3" #Release/Debug
 BUILD_ARCH="$4" #Android/AndroidGradle/Win64/linux
-SOURCE_PROJECT="magnum-bootstrap"
+SOURCE_PROJECT="magnum-bootstrap-android"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
@@ -55,6 +55,13 @@ elif [ "$BUILD_ARCH" = "Win64" ] ; then
 
 ADDITIONAL_CMAKE_PARAMS=""
 GENERATOR="Visual Studio 15 2017 Win64"
+
+elif [ "$BUILD_ARCH" = "macOS" ] ; then
+
+cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  -G"${GENERATOR}" \
+  -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
+  -DCMAKE_PREFIX_PATH="${INSTALL_LOCATION}"
 
 else
 
