@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#export CC=/usr/bin/clang-7
-#export CXX=/usr/bin/clang++-7
-
 set -x
 
 SOURCES_FOLDER="$1"
@@ -26,14 +23,18 @@ rm -rf "${BUILD_LOCATION}"/*
 
 if [ "$BUILD_ARCH" = "Android" ]; then
 
-  ANDROID_NDK=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
+if [[ -z "${ANDROID_NDK_HOME}" ]]; then
+    echo "ANDROID_NDK_HOME environment variable not set!"
+    exit 1
+fi
+  # ANDROID_NDK_HOME=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
 
   ADDITIONAL_CMAKE_PARAMS=""
     cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -G"${GENERATOR}" \
         -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
+        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake" \
+        -DCMAKE_ANDROID_NDK="${ANDROID_NDK_HOME}" \
         -DCMAKE_SYSTEM_NAME=Android \
         -DCMAKE_SYSTEM_VERSION=26 \
         -DCMAKE_ANDROID_ARCH_ABI=${BUILD_ABI} \
@@ -70,4 +71,4 @@ BUILD_ARCH="x86"
 fi
 
 #cd ${BUILD_LOCATION}
-#cmake --build . --config ${BUILD_TYPE}
+#cmake --build . --target install --config ${BUILD_TYPE}

@@ -14,32 +14,37 @@ SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 
 GENERATOR="Ninja"
 
-if [ "$BUILD_ARCH" = "yocto" ] ; then
-ADDITIONAL_CMAKE_PARAMS="-DCMAKE_TOOLCHAIN_FILE=/usr/local/vos-x86_64/DAQRI-VOS-Toolchain-GCC.cmake"
-elif [ "$BUILD_ARCH" = "Win64" ] ; then
-ADDITIONAL_CMAKE_PARAMS=""
-GENERATOR="Visual Studio 15 2017 Win64"
-else
-ADDITIONAL_CMAKE_PARAMS=""
-BUILD_ARCH="x86"
-#export CC=/usr/bin/clang
-#export CXX=/usr/bin/clang++
-fi
-
 BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_ARCH}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-install-${BUILD_ARCH}-${BUILD_TYPE}
-STAGING_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-staging-${BUILD_ARCH}-${BUILD_TYPE}
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}
 
-# Windows: all binaries have to be installed to the same location including Corrade.
-INSTALL_LOCATION=${BUILD_FOLDER}/install
-STAGING_LOCATION=${BUILD_FOLDER}/staging
-
-ls ${BUILD_FOLDER}/corrade-staging-${BUILD_ARCH}-${BUILD_TYPE}/share/cmake/Corrade
+if [ "$BUILD_ARCH" = "Android" ]; then
+    BUILD_ABI="arm64-v8a" # arm64-v8a/armeabi-v7a (Android only)
+    BUILD_LOCATION=${BUILD_LOCATION}-${BUILD_ABI}
+fi
 
 mkdir -p "${BUILD_LOCATION}"
 rm -rf "${BUILD_LOCATION}"/*
+
+if [ "$BUILD_ARCH" = "Android" ] ; then
+
+  ADDITIONAL_CMAKE_PARAMS="-DCMAKE_TOOLCHAIN_FILE=/usr/local/vos-x86_64/DAQRI-VOS-Toolchain-GCC.cmake"
+
+elif [ "$BUILD_ARCH" = "Win64" ] ; then
+
+  ADDITIONAL_CMAKE_PARAMS=""
+  GENERATOR="Visual Studio 16 2019"
+
+else
+
+  ADDITIONAL_CMAKE_PARAMS=""
+  BUILD_ARCH="x86"
+  #export CC=/usr/bin/clang
+  #export CXX=/usr/bin/clang++
+fi
+
 cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
   -G"${GENERATOR}" \
+  -A Win32 \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
   -DCMAKE_STAGING_PREFIX="${STAGING_LOCATION}" \
   -DCMAKE_PREFIX_PATH="" \
