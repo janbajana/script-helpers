@@ -24,7 +24,31 @@ rm -rf "${BUILD_LOCATION}"/*
 if [ "$BUILD_ARCH" = "Android" ]; then
 
     ANDROID_NDK=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
-    # INSTALL_LOCATION=${ANDROID_NDK}/platforms/android-22/arch-arm64/usr
+
+    ADDITIONAL_CMAKE_PARAMS=" \
+        -DWITH_ANYAUDIOIMPORTER=OFF \
+        -DWITH_ANYIMAGECONVERTER=ON \
+        -DWITH_ANYIMAGEIMPORTER=ON \
+        -DWITH_ANYSCENEIMPORTER=ON \
+        -DWITH_MAGNUMFONT=ON \
+        -DWITH_MAGNUMFONTCONVERTER=ON \
+        -DWITH_OBJIMPORTER=ON \
+        -DWITH_TGAIMAGECONVERTER=ON \
+        -DWITH_TGAIMPORTER=ON \
+        -DWITH_WAVAUDIOIMPORTER=OFF \
+        \
+        -DWITH_GL_INFO=ON \
+        -DWITH_AL_INFO=OFF \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_GL_TESTS=OFF \
+        \
+        -DWITH_SDL2APPLICATION=OFF \
+        -DWITH_ANDROIDAPPLICATION=ON \
+        -DTARGET_GLES2=OFF \
+        -DTARGET_GLES3=ON \
+        -DBUILD_DEPRECATED=OFF \
+        -DWITH_EGLCONTEXT=ON
+    "
 
     cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -G"${GENERATOR}" \
@@ -41,24 +65,7 @@ if [ "$BUILD_ARCH" = "Android" ]; then
         -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
         -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-        -DWITH_AUDIO=OFF \
-        -DWITH_DEBUGTOOLS=ON \
-        -DWITH_MESHTOOLS=ON \
-        -DWITH_PRIMITIVES=ON \
-        -DWITH_SCENEGRAPH=ON \
-        -DWITH_SHADERS=ON \
-        -DWITH_TEXT=ON \
-        -DWITH_TEXTURETOOLS=ON \
-        -DWITH_TRADE=ON \
-        -DWITH_SDL2APPLICATION=OFF \
-        -DWITH_ANDROIDAPPLICATION=ON \
-        -DTARGET_GLES2=OFF \
-        -DTARGET_GLES3=ON \
-        -DBUILD_DEPRECATED=OFF \
-        -DWITH_EGLCONTEXT=ON
-
-#-D_CORRADE_MODULE_DIR="${ANDROID_NDK}/sysroot/usr/share/cmake/Corrade" \
-#-DMAGNUM_INCLUDE_INSTALL_PREFIX=${ANDROID_NDK}/sysroot/usr \
+        ${ADDITIONAL_CMAKE_PARAMS}
 
 elif [ "$BUILD_ARCH" = "Win64" ]; then
 
@@ -85,6 +92,12 @@ elif [ "$BUILD_ARCH" = "Win64" ]; then
         -DWITH_AL_INFO=OFF \
         -DBUILD_TESTS=OFF \
         -DBUILD_GL_TESTS=OFF \
+        \
+        -DWITH_SDL2APPLICATION=ON \
+        -DWITH_GLFWAPPLICATION=OFF \
+        -DTARGET_DESKTOP_GLES=OFF \
+        -DTARGET_GLES=OFF \
+        -DTARGET_GLES2=OFF \
     "
 
     cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
@@ -93,11 +106,6 @@ elif [ "$BUILD_ARCH" = "Win64" ]; then
         -DCMAKE_PREFIX_PATH="${BUILD_FOLDER}\SDL2-2.0.10" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
-        -DWITH_SDL2APPLICATION=ON \
-        -DWITH_GLFWAPPLICATION=OFF \
-        -DTARGET_DESKTOP_GLES=OFF \
-        -DTARGET_GLES=OFF \
-        -DTARGET_GLES2=OFF
         ${ADDITIONAL_CMAKE_PARAMS}
 
 else #expected Linux x86
