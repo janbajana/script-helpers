@@ -51,14 +51,6 @@ fi
 elif [ "$BUILD_ARCH" = "Win64" ] ; then
 
   GENERATOR="Visual Studio 16 2019"
-  #INSTALL_LOCATION="/c/Corrade"
-
-  # ADDITIONAL_CMAKE_PARAMS=" \
-  #     -DWITH_INTERCONNECT=OFF \
-  #     -DWITH_PLUGINMANAGER=OFF \
-  #     -DWITH_TESTSUITE=OFF \
-  #     -DWITH_UTILITY=OFF \
-  #     "
 
   ADDITIONAL_CMAKE_PARAMS=" \
       -DWITH_INTERCONNECT=ON \
