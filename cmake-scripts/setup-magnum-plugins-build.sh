@@ -63,11 +63,20 @@ elif [ "$BUILD_ARCH" = "Win64" ]; then
     
     # ${ADDITIONAL_CMAKE_PARAMS}
 
-else
-ADDITIONAL_CMAKE_PARAMS=""
-BUILD_ARCH="x86"
-#export CC=/usr/bin/clang
-#export CXX=/usr/bin/clang++
+elif [ "$BUILD_ARCH" = "Linux" ]; then
+
+  export CC=/usr/bin/clang
+  export CXX=/usr/bin/clang++
+
+  ADDITIONAL_CMAKE_PARAMS=""
+
+  cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  -G"${GENERATOR}" \
+    -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
+    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+    -DWITH_ASSIMPIMPORTER=OFF \
+    -DWITH_TINYGLTFIMPORTER=ON
+
 fi
 
 #cd ${BUILD_LOCATION}
