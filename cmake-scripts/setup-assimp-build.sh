@@ -1,14 +1,13 @@
 #!/bin/bash
 
-#export CC=/usr/bin/clang-7
-#export CXX=/usr/bin/clang++-7
-
 set -x
 
-SOURCES_FOLDER="$1"
-BUILD_FOLDER="$2"
-BUILD_TYPE="$3" # Release/Debug
-BUILD_ARCH="$4" #yocto/Win64/linux
+SOURCES_FOLDER="$1" # input directory (example) /e/Git
+BUILD_FOLDER="$2"   # output directory (example) /e/Git/build
+BUILD_TYPE="$3"     # Release/Debug
+BUILD_ARCH="$4"     # Android/Win64/linux
+PROCESS_BUILD="$5"  # ON/OFF build or configurtion only
+
 SOURCE_PROJECT="assimp"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 
@@ -31,25 +30,29 @@ if [ "$BUILD_ARCH" = "Android" ] ; then
 
 elif [ "$BUILD_ARCH" = "Win64" ] ; then
 
-  ADDITIONAL_CMAKE_PARAMS=""
+  ADDITIONAL_CMAKE_PARAMS=" \
+    -A Win32 \
+  "
   GENERATOR="Visual Studio 16 2019"
 
 else
 
   ADDITIONAL_CMAKE_PARAMS=""
   BUILD_ARCH="x86"
-  #export CC=/usr/bin/clang
-  #export CXX=/usr/bin/clang++
+
+  export CC=/usr/bin/clang
+  export CXX=/usr/bin/clang++
+
 fi
 
 cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
   -G"${GENERATOR}" \
-  -A Win32 \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-  -DCMAKE_STAGING_PREFIX="${STAGING_LOCATION}" \
-  -DCMAKE_PREFIX_PATH="" \
   -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+  -DBUILD_SHARED_LIBS=OFF \
   ${ADDITIONAL_CMAKE_PARAMS}
 
-#cd ${BUILD_LOCATION}
-#cmake --build . --config ${BUILD_TYPE}
+if [ "$PROCESS_BUILD" = "ON" ]; then
+    cd ${BUILD_LOCATION}
+    cmake --build . --config ${BUILD_TYPE} --target install
+fi

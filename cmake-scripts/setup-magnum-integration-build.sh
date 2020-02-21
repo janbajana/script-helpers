@@ -2,10 +2,12 @@
 
 set -x
 
-SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
-BUILD_FOLDER="$2" # output directory (example) /e/Git/
-BUILD_TYPE="$3" # Release/Debug
-BUILD_ARCH="$4" # Android/Win64/linux
+SOURCES_FOLDER="$1" # input directory (example) /e/Git
+BUILD_FOLDER="$2"   # output directory (example) /e/Git/build/
+BUILD_TYPE="$3"     # Release/Debug
+BUILD_ARCH="$4"     # Android/Win64/linux
+PROCESS_BUILD="$5"  # ON/OFF
+
 SOURCE_PROJECT="magnum-integration"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
@@ -67,6 +69,7 @@ BUILD_ARCH="x86"
 
 fi
 
-#cd ${BUILD_LOCATION}
-#cmake --build . --config ${BUILD_TYPE}
-#cmake --build . --config ${BUILD_TYPE} --target install
+if [ "$PROCESS_BUILD" = "ON" ]; then
+    cd ${BUILD_LOCATION}
+    cmake --build . --config ${BUILD_TYPE} --target install
+fi

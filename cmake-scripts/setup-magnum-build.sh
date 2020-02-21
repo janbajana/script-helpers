@@ -2,10 +2,12 @@
 
 set -x
 
-SOURCES_FOLDER="$1" # input directory (example) /e/Git/
-BUILD_FOLDER="$2"   # output directory (example) /e/Git/build/
+SOURCES_FOLDER="$1" # root input directory (example) /e/Git
+BUILD_FOLDER="$2"   # build output directory (example) /e/Git/build/
 BUILD_TYPE="$3"     # Release/Debug
 BUILD_ARCH="$4"     # Android/Win64/linux
+PROCESS_BUILD="$5"  # ON/OFF
+
 SOURCE_PROJECT="magnum"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
@@ -115,7 +117,7 @@ elif [ "$BUILD_ARCH" = "macOS" ]; then
 
 # GENERATOR=Xcode
 
-  ADDITIONAL_CMAKE_PARAMS=" \
+    ADDITIONAL_CMAKE_PARAMS=" \
         -DWITH_WINDOWLESSWGLAPPLICATION=ON \
         -DWITH_WGLCONTEXT=ON \
         -DWITH_OPENGLTESTER=ON \
@@ -136,30 +138,56 @@ elif [ "$BUILD_ARCH" = "macOS" ]; then
         -DWITH_AL_INFO=OFF \
         -DBUILD_TESTS=OFF \
         -DBUILD_GL_TESTS=OFF \
-    "
-
-    cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -G"${GENERATOR}" \
-        -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+        \
         -DWITH_SDL2APPLICATION=ON \
         -DWITH_GLFWAPPLICATION=OFF \
         -DTARGET_DESKTOP_GLES=OFF \
         -DTARGET_GLES=OFF \
-        -DTARGET_GLES2=OFF
-        
-        # ${ADDITIONAL_CMAKE_PARAMS}
+        -DTARGET_GLES2=OFF \
+    "
 
 else #expected Linux x86
 
-    ADDITIONAL_CMAKE_PARAMS=" \
-    -DWITH_SDL2APPLICATION=ON"
-    BUILD_ARCH="x86"
-#export CC=/usr/bin/clang
-#export CXX=/usr/bin/clang++
+    export CC=/usr/bin/clang
+    export CXX=/usr/bin/clang++
 
+    ADDITIONAL_CMAKE_PARAMS=" \
+        -DWITH_ANYAUDIOIMPORTER=OFF \
+        -DWITH_ANYIMAGECONVERTER=ON \
+        -DWITH_ANYIMAGEIMPORTER=ON \
+        -DWITH_ANYSCENEIMPORTER=ON \
+        -DWITH_MAGNUMFONT=ON \
+        -DWITH_MAGNUMFONTCONVERTER=ON \
+        -DWITH_OBJIMPORTER=ON \
+        -DWITH_TGAIMAGECONVERTER=ON \
+        -DWITH_TGAIMPORTER=ON \
+        -DWITH_WAVAUDIOIMPORTER=OFF \
+        -DWITH_DISTANCEFIELDCONVERTER=ON \
+        -DWITH_FONTCONVERTER=ON \
+        -DWITH_IMAGECONVERTER=ON \
+        -DWITH_GL_INFO=ON \
+        -DWITH_AL_INFO=OFF \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_GL_TESTS=OFF \
+        \
+        -DWITH_SDL2APPLICATION=ON \
+        -DWITH_GLFWAPPLICATION=OFF \
+        -DTARGET_DESKTOP_GLES=OFF \
+        -DTARGET_GLES=OFF \
+        -DTARGET_GLES2=OFF \
+        -DBUILD_PLUGINS_STATIC=OFF
+    "
 fi
 
-#cd ${BUILD_LOCATION}
-#cmake --build . --target install --config ${BUILD_TYPE}
+cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    -G"${GENERATOR}" \
+    -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
+    -DBUILD_STATIC=ON \
+    ${ADDITIONAL_CMAKE_PARAMS}
+
+if [ "$PROCESS_BUILD" = "ON" ]; then
+    cd ${BUILD_LOCATION}
+    cmake --build . --config ${BUILD_TYPE} --target install
+fi

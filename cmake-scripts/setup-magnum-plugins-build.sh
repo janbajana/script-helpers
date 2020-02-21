@@ -2,10 +2,12 @@
 
 set -x
 
-SOURCES_FOLDER="$1"
-BUILD_FOLDER="$2"
-BUILD_TYPE="$3" # Release/Debug
-BUILD_ARCH="$4" #yocto/Win64/linux
+SOURCES_FOLDER="$1" # root input directory (example) /e/Git
+BUILD_FOLDER="$2"   # build output directory (example) /e/Git/build/
+BUILD_TYPE="$3"     # Release/Debug
+BUILD_ARCH="$4"     # Android/Win64/linux
+PROCESS_BUILD="$5"  # ON/OFF
+
 SOURCE_PROJECT="magnum-plugins"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
@@ -74,16 +76,25 @@ elif [ "$BUILD_ARCH" = "Linux" ]; then
   export CC=/usr/bin/clang
   export CXX=/usr/bin/clang++
 
-  ADDITIONAL_CMAKE_PARAMS=""
+  ADDITIONAL_CMAKE_PARAMS=" \
+      -DBUILD_PLUGINS_STATIC=OFF \
+  "
 
-  cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+fi
+
+cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
   -G"${GENERATOR}" \
     -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
     -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
     -DWITH_ASSIMPIMPORTER=OFF \
-    -DWITH_TINYGLTFIMPORTER=ON
+    -DWITH_TINYGLTFIMPORTER=ON \
+    -DWITH_STBIMAGEIMPORTER=ON \
+    -DWITH_JPEGIMPORTER=OFF \
+    -DWITH_PNGIMPORTER=OFF \
+    -DBUILD_STATIC=ON \
+    ${ADDITIONAL_CMAKE_PARAMS}
 
+if [ "$PROCESS_BUILD" = "ON" ]; then
+    cd ${BUILD_LOCATION}
+    cmake --build . --config ${BUILD_TYPE} --target install
 fi
-
-#cd ${BUILD_LOCATION}
-#cmake --build . --target install --config ${BUILD_TYPE}
