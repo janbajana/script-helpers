@@ -5,7 +5,12 @@ Script helpers to build 3rd party libraries including Magnum engine and it's dep
 ## Magnum
 ## Clone Magnum
 
-`clone-all-magnum` will clone all Magnum repositories and all dependencies required by local build scripts.
+To clone all Magnum repositories with all dependencies required by local build scripts.
+
+`./clone-all-magnum.sh /d/Work/Git`
+
+Where:
+- "$1": root input directory (example) /e/Git
 
 ## Build Magnum
 
@@ -14,7 +19,7 @@ You can build particular project by calling one of the scripts with appropriate 
 
 For example to setup Corrade:
 
-- ./setup-corrade-build.sh /d/Work/Git /d/Work/Git/build Release Win64 ON
+`./setup-corrade-build.sh /d/Work/Git /d/Work/Git/build Release Win64 ON`
 
 Where:
 - "$1": root input directory (example) /e/Git
@@ -27,7 +32,8 @@ Script will create cmake configuration in specified build folder.
 Be aware that calling the build script means clean and rebuild the project again.
 For faster development it is better to go directly to the generated build folder and call build `ninja` for example.
 
-To configure and rebuild all projects you can call:
-- ./setup-build-all-magnum.sh /d/Work/Git /d/Work/Git/build Release Win64
+To configure and rebuild all projects call:
+
+`./setup-build-all-magnum.sh /d/Work/Git /d/Work/Git/build Release Win64`
 
 The script will call, setup, build and install all projects in right order.
