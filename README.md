@@ -1,6 +1,6 @@
 # script-helpers
 
-Script helpers to build many 3rd party libraries including Magnum engine and it's dependencies.
+Script helpers to build 3rd party libraries including Magnum engine and it's dependencies during development process.
 
 ## Magnum
 ## Clone Magnum
