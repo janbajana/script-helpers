@@ -8,7 +8,7 @@ BUILD_TYPE="$3"     # Release/Debug
 BUILD_ARCH="$4"     # Android/Win64/linux
 PROCESS_BUILD="$5"  # ON/OFF
 
-SOURCE_PROJECT="magnum-plugins"
+SOURCE_PROJECT="magnum-extras"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
@@ -29,9 +29,10 @@ if [[ -z "${ANDROID_NDK_HOME}" ]]; then
     echo "ANDROID_NDK_HOME environment variable not set!"
     exit 1
 fi
+    
+    ADDITIONAL_CMAKE_PARAMS=" \
+    "
 
-  ADDITIONAL_CMAKE_PARAMS=""
-  
     cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -G"${GENERATOR}" \
         -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
@@ -46,40 +47,41 @@ fi
         -DCMAKE_ANDROID_STL_TYPE=c++_static \
         -DCMAKE_FIND_ROOT_PATH="${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}" \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-        -DWITH_ASSIMPIMPORTER=OFF \
-        -DWITH_TINYGLTFIMPORTER=ON \
-        -DWITH_STBIMAGEIMPORTER=ON \
-        -DWITH_JPEGIMPORTER=OFF \
-        -DWITH_PNGIMPORTER=OFF
+        ${ADDITIONAL_CMAKE_PARAMS}
 
 elif [ "$BUILD_ARCH" = "Win64" ]; then
 
-  GENERATOR="Visual Studio 16 2019"
+    GENERATOR="Visual Studio 16 2019"
 
-  ADDITIONAL_CMAKE_PARAMS=" \
-      -DBUILD_PLUGINS_STATIC=OFF
-  "
+    ADDITIONAL_CMAKE_PARAMS=" \
+    "
 
-elif [ "$BUILD_ARCH" = "Linux" ]; then
+elif [ "$BUILD_ARCH" = "macOS" ]; then
 
-  export CC=/usr/bin/clang
-  export CXX=/usr/bin/clang++
+# GENERATOR=Xcode
 
-  ADDITIONAL_CMAKE_PARAMS=" \
-      -DBUILD_PLUGINS_STATIC=OFF
-  "
+    ADDITIONAL_CMAKE_PARAMS=" \
+    "
 
+else #expected Linux x86
+
+    export CC=/usr/bin/clang
+    export CXX=/usr/bin/clang++
+
+    ADDITIONAL_CMAKE_PARAMS=" \
+    "
 fi
 
 cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-  -G"${GENERATOR}" \
+    -G"${GENERATOR}" \
     -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
     -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
-    -DWITH_ASSIMPIMPORTER=OFF \
-    -DWITH_TINYGLTFIMPORTER=ON \
-    -DWITH_STBIMAGEIMPORTER=ON \
-    -DWITH_JPEGIMPORTER=OFF \
-    -DWITH_PNGIMPORTER=OFF \
+    -DWITH_PLAYER=ON \
+    -DWITH_UI=ON \
+    -DWITH_UI_GALLERY=ON \
+    -DBUILD_TESTS=OFF \
+    -DBUILD_GL_TESTS=OFF \
     -DBUILD_STATIC=ON \
     ${ADDITIONAL_CMAKE_PARAMS}
 
