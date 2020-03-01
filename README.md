@@ -28,11 +28,11 @@ Where:
 - "$5": build system Android/Win64/macOS/Linux
 - "$6": perform build or configuration only ON/OFF. If ON system will build and install project.
 
-Script will create cmake configuration in specified build folder.
+Script will configure cmake project in generated build folder.
 Be aware that calling the build script means clean and rebuild the project again.
-For faster development it is better to go directly to the generated build folder and call build `ninja` for example.
+For faster development it is better to go directly to the generated build folder and call build from there. For example `ninja` build.
 
-To configure and rebuild all projects call:
+To configure and rebuild all projects at ones call:
 
 `./setup-build-all-magnum.sh /d/Work/Git /d/Work/Git/build Release Win64`
 
