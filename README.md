@@ -1,11 +1,11 @@
 # script-helpers
 
-Script helpers to build 3rd party libraries including Magnum engine and it's dependencies during development process.
+Script helpers to build 3rd party libraries including Magnum engine and it's dependencies.
 
 ## Magnum
 ## Clone Magnum
 
-To clone all Magnum repositories with all dependencies required by local build scripts.
+To clone all Magnum repositories with all dependencies required by build scripts call:
 
 `./clone-all-magnum.sh /d/Work/Git`
 
