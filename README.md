@@ -22,7 +22,7 @@ For example to setup Corrade:
 `./setup-corrade-build.sh /d/Work/Git /d/Work/Git/build Release Win64 ON`
 
 Where:
-- "$1": root input directory (example) /e/Git
+- "$1": root source directory (example) /e/Git
 - "$2": build output directory (example) /e/Git/build/
 - "$3": build type Release/Debug
 - "$5": build system Android/Win64/macOS/Linux
