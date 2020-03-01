@@ -44,8 +44,8 @@ if [ "$BUILD_ARCH" = "Android" ] ; then
       -DWITH_INTERCONNECT=OFF
       "
 
+  # If corrade util does not exist on system level you can point it to cutom build.
   # -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
-  # -DCORRADE_INCLUDE_INSTALL_PREFIX=${ANDROID_NDK}/sysroot/usr \
 
 elif [ "$BUILD_ARCH" = "Win64" ] ; then
 

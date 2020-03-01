@@ -103,15 +103,8 @@ elif [ "$BUILD_ARCH" = "Win64" ]; then
         -DTARGET_DESKTOP_GLES=OFF \
         -DTARGET_GLES=OFF \
         -DTARGET_GLES2=OFF \
+        -DBUILD_PLUGINS_STATIC=OFF
     "
-
-    cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -G"${GENERATOR}" \
-        -DCMAKE_INSTALL_PREFIX="${INSTALL_LOCATION}" \
-        -DCMAKE_PREFIX_PATH="${BUILD_FOLDER}\SDL2-2.0.10" \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="bin" \
-        ${ADDITIONAL_CMAKE_PARAMS}
 
 elif [ "$BUILD_ARCH" = "macOS" ]; then
 
@@ -144,6 +137,7 @@ elif [ "$BUILD_ARCH" = "macOS" ]; then
         -DTARGET_DESKTOP_GLES=OFF \
         -DTARGET_GLES=OFF \
         -DTARGET_GLES2=OFF \
+        -DBUILD_PLUGINS_STATIC=OFF
     "
 
 else #expected Linux x86

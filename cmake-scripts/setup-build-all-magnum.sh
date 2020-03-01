@@ -13,6 +13,15 @@ BUILD_ABI="arm64-v8a" # arm64-v8a/armeabi-v7a (Android only)
 
 CURRENT_LOCATION="$PWD"
 
+#3rd dependency
+# SOURCE_PROJECT="SDL"
+# cd ${CURRENT_LOCATION}
+# ./setup-${SOURCE_PROJECT}-build.sh ${SOURCES_FOLDER} ${BUILD_FOLDER} ${BUILD_TYPE} ${BUILD_SYSTEM} ON
+
+# SOURCE_PROJECT="assimp"
+# cd ${CURRENT_LOCATION}
+# ./setup-${SOURCE_PROJECT}-build.sh ${SOURCES_FOLDER} ${BUILD_FOLDER} ${BUILD_TYPE} ${BUILD_SYSTEM} ON
+
 # ...
 SOURCE_PROJECT="corrade"
 cd ${CURRENT_LOCATION}
