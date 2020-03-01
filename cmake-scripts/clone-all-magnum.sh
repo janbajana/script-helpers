@@ -6,7 +6,7 @@ SOURCES_FOLDER="$1"   # source directory (example) /d/Work/Git
 
 SOURCE_LOCATION="${SOURCES_FOLDER}"
 
-#SDL
+# ...
 SOURCE_PROJECT="SDL"
 hg clone http://hg.libsdl.org/${SOURCE_PROJECT} ${SOURCE_LOCATION}/${SOURCE_PROJECT}
 
