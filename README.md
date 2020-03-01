@@ -17,7 +17,7 @@ Where:
 Folder includes setup scripts for cloned projects.
 You can build particular project by calling one of the scripts with appropriate arguments.
 
-For example to setup Corrade:
+For example to setup and build Corrade:
 
 `./setup-corrade-build.sh /d/Work/Git /d/Work/Git/build Release Win64 ON`
 
