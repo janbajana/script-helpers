@@ -10,7 +10,7 @@ To clone all Magnum repositories with all dependencies required by local build s
 `./clone-all-magnum.sh /d/Work/Git`
 
 Where:
-- "$1": root input directory (example) /e/Git
+- "$1": root input directory (example) /d/Git
 
 ## Build Magnum
 
