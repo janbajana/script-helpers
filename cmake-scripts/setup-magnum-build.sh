@@ -29,7 +29,6 @@ if [[ -z "${ANDROID_NDK_HOME}" ]]; then
     echo "ANDROID_NDK_HOME environment variable not set!"
     exit 1
 fi
-    # export ANDROID_NDK_HOME=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
     
     ADDITIONAL_CMAKE_PARAMS=" \
         -DWITH_ANYAUDIOIMPORTER=OFF \
