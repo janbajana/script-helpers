@@ -5,17 +5,17 @@ set -x
 SOURCES_FOLDER="$1" # input directory (example) /e/Git/build/
 BUILD_FOLDER="$2"   # output directory (example) /e/Git/
 BUILD_TYPE="$3"     # Release/Debug
-BUILD_ARCH="$4"     # Android/Win64/Linux
+BUILD_SYSTEM="$4"   # Android/Win64/macOS/Linux
 PROCESS_BUILD="$5"  # ON/OFF build or configurtion only
 
 SOURCE_PROJECT="corrade"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
-BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_ARCH}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}
+BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_SYSTEM}-${BUILD_TYPE}
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_SYSTEM}-${BUILD_TYPE}
 
-if [ "$BUILD_ARCH" = "Android" ]; then
+if [ "$BUILD_SYSTEM" = "Android" ]; then
     BUILD_ABI="arm64-v8a" # arm64-v8a/armeabi-v7a (Android only)
     BUILD_LOCATION=${BUILD_LOCATION}-${BUILD_ABI}
 fi
@@ -23,7 +23,7 @@ fi
 mkdir -p "${BUILD_LOCATION}"
 rm -rf "${BUILD_LOCATION}"/*
 
-if [ "$BUILD_ARCH" = "Android" ] ; then
+if [ "$BUILD_SYSTEM" = "Android" ] ; then
 
   if [[ -z "${ANDROID_NDK_HOME}" ]]; then
       echo "ANDROID_NDK_HOME environment variable not set!"
@@ -47,7 +47,7 @@ if [ "$BUILD_ARCH" = "Android" ] ; then
   # If corrade util does not exist on system level you can point it to cutom build.
   # -DCORRADE_RC_EXECUTABLE="/c/Corrade/bin/corrade-rc.exe" \
 
-elif [ "$BUILD_ARCH" = "Win64" ] ; then
+elif [ "$BUILD_SYSTEM" = "Win64" ] ; then
 
   GENERATOR="Visual Studio 16 2019"
 
@@ -61,7 +61,7 @@ elif [ "$BUILD_ARCH" = "Win64" ] ; then
 
 else #expected Linux x86
 
-  BUILD_ARCH="x86"
+  BUILD_SYSTEM="x86"
 
   ADDITIONAL_CMAKE_PARAMS=" \
       -DWITH_INTERCONNECT=ON \

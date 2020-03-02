@@ -5,9 +5,8 @@ set -x
 SOURCES_FOLDER="$1" # input directory (example) /e/Git
 BUILD_FOLDER="$2"   # output directory (example) /e/Git/build
 BUILD_TYPE="$3"     # Release/Debug
-BUILD_SYSTEM="$4"     # Android/Win64/linux
+BUILD_SYSTEM="$4"   # Android/Win64/macOS/Linux
 PROCESS_BUILD="$5"  # ON/OFF build or configurtion only
-BUILD_ARCH=arm64-v8a     # arm64-v8a/armeabi-v7a (Android only)
 
 SOURCE_PROJECT="assimp"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
@@ -15,9 +14,10 @@ SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
 BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_SYSTEM}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-install-${BUILD_SYSTEM}-${BUILD_TYPE}
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_SYSTEM}-${BUILD_TYPE}
 
 if [ "$BUILD_SYSTEM" = "Android" ]; then
+    BUILD_ARCH=arm64-v8a # arm64-v8a/armeabi-v7a (Android only)
     BUILD_LOCATION=${BUILD_LOCATION}-${BUILD_ARCH}
 fi
 
