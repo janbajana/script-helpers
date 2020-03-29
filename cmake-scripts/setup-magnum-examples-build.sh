@@ -5,20 +5,20 @@ set -x
 SOURCES_FOLDER="$1" # input directory (example) /e/Git/
 BUILD_FOLDER="$2"   # output directory (example) /e/Git/build
 BUILD_TYPE="$3"     # Release/Debug
-BUILD_ARCH="$4"     # Android/Win64/linux
+BUILD_SYSTEM="$4"     # Android/Win64/linux
 PROCESS_BUILD="$5"  # ON/OFF
 
 SOURCE_PROJECT="magnum-examples"
 SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
-BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_ARCH}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_ARCH}-${BUILD_TYPE}
+BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_SYSTEM}-${BUILD_TYPE}
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_SYSTEM}-${BUILD_TYPE}
 
 mkdir -p "${BUILD_LOCATION}"
 rm -rf "${BUILD_LOCATION}"/*
 
-if [ "$BUILD_ARCH" = "Android" ] ; then
+if [ "$BUILD_SYSTEM" = "Android" ] ; then
 
 ANDROID_NDK=${HOME}/AppData/Local/Android/Sdk/ndk/20.0.5594570
 
@@ -33,20 +33,20 @@ ADDITIONAL_CMAKE_PARAMS=" \
     -DCORRADE_RC_EXECUTABLE=${BUILD_FOLDER}/install-Win64-Release/bin/corrade-rc.exe \
     "
 
-elif [ "$BUILD_ARCH" = "Win64" ] ; then
+elif [ "$BUILD_SYSTEM" = "Win64" ] ; then
 
 GENERATOR="Visual Studio 16 2019"
 
 ADDITIONAL_CMAKE_PARAMS=""
 
-elif [ "$BUILD_ARCH" = "macOS" ]; then
+elif [ "$BUILD_SYSTEM" = "macOS" ]; then
 
   ADDITIONAL_CMAKE_PARAMS=""
 
 else
 
   ADDITIONAL_CMAKE_PARAMS=""
-  BUILD_ARCH="x86"
+  BUILD_SYSTEM="x86"
   export CC=/usr/bin/clang
   export CXX=/usr/bin/clang++
 
