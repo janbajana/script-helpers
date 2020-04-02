@@ -57,7 +57,6 @@ GENERATOR="Visual Studio 16 2019"
 else #expected Linux x86
 
 ADDITIONAL_CMAKE_PARAMS=""
-BUILD_SYSTEM="x86"
 
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++

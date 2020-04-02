@@ -5,7 +5,7 @@ set -x
 SOURCES_FOLDER="$1" # input directory (example) /e/Git/
 BUILD_FOLDER="$2"   # output directory (example) /e/Git/build
 BUILD_TYPE="$3"     # Release/Debug
-BUILD_SYSTEM="$4"     # Android/Win64/linux
+BUILD_SYSTEM="$4"     # Android/Win64/Linux
 PROCESS_BUILD="$5"  # ON/OFF
 
 SOURCE_PROJECT="magnum-examples"
@@ -46,7 +46,7 @@ elif [ "$BUILD_SYSTEM" = "macOS" ]; then
 else
 
   ADDITIONAL_CMAKE_PARAMS=""
-  BUILD_SYSTEM="x86"
+  BUILD_SYSTEM="Linux"
   export CC=/usr/bin/clang
   export CXX=/usr/bin/clang++
 
@@ -64,6 +64,7 @@ cmake -B"${BUILD_LOCATION}" -H"${SOURCE_LOCATION}" -DCMAKE_BUILD_TYPE=${BUILD_TY
   -DWITH_PRIMITIVES_EXAMPLE=ON \
   -DWITH_SHADOWS_EXAMPLE=ON \
   -DWITH_VIEWER_EXAMPLE=ON \
+  -DWITH_TEXT_EXAMPLE=ON \
   ${ADDITIONAL_CMAKE_PARAMS}
 
 if [ "$PROCESS_BUILD" = "ON" ]; then
