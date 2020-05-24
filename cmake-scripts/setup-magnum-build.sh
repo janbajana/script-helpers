@@ -128,6 +128,7 @@ elif [ "$BUILD_SYSTEM" = "macOS" ]; then
         -DWITH_IMAGECONVERTER=ON \
         -DWITH_GL_INFO=ON \
         -DWITH_AL_INFO=OFF \
+        -DWITH_DEBUGTOOLS=ON \
         -DBUILD_TESTS=OFF \
         -DBUILD_GL_TESTS=OFF \
         \
@@ -160,6 +161,7 @@ else #expected Linux x86
         -DWITH_IMAGECONVERTER=ON \
         -DWITH_GL_INFO=ON \
         -DWITH_AL_INFO=OFF \
+        -DWITH_DEBUGTOOLS=ON \
         -DBUILD_TESTS=OFF \
         -DBUILD_GL_TESTS=OFF \
         \
