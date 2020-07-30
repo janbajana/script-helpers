@@ -13,7 +13,7 @@ SOURCE_LOCATION="${SOURCES_FOLDER}/${SOURCE_PROJECT}"
 GENERATOR="Ninja"
 
 BUILD_LOCATION=${BUILD_FOLDER}/${SOURCE_PROJECT}-build-${BUILD_SYSTEM}-${BUILD_TYPE}
-INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_SYSTEM}-${BUILD_TYPE}-test
+INSTALL_LOCATION=${BUILD_FOLDER}/install-${BUILD_SYSTEM}-${BUILD_TYPE}-gst
 
 if [ "$BUILD_SYSTEM" = "Android" ]; then
     BUILD_ABI="arm64-v8a" # arm64-v8a/armeabi-v7a (Android only)
@@ -74,3 +74,6 @@ if [ "$PROCESS_BUILD" = "ON" ]; then
     meson compile -j6 -C ${BUILD_LOCATION}
     meson install -C ${BUILD_LOCATION}
 fi
+
+export GST_PLUGIN_PATH="${INSTALL_LOCATION}/lib/x86_64-linux-gnu"
+export PKG_CONFIG_PATH="${INSTALL_LOCATION}/lib/x86_64-linux-gnu/pkgconfig"
